@@ -155,6 +155,11 @@ void CDoc::Save()
 			}
 		}
 		else
+		if (fReadOnly && fDocIO->IsLocal() && EntryRef() && !IsDirty())
+		{
+			return;
+		}
+		else
 		{
 			// Ask user where to save to
 			SaveAs();
