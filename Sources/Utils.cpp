@@ -159,7 +159,8 @@ void SendToIDE(const BMessage& msg, BMessage *reply)
 {
 	entry_ref ide;
 	if (be_roster->FindApp("application/x-mw-BeIDE", &ide))
-		THROW(("BeIDE was not found"));
+		if (be_roster->FindApp("application/x-vnd.dw-Paladin", &ide))
+			THROW(("BeIDE/Paladin was not found"));
 
 	if (be_roster->IsRunning(&ide))
 	{
@@ -167,7 +168,7 @@ void SendToIDE(const BMessage& msg, BMessage *reply)
 		msgr.SendMessage(const_cast<BMessage*>(&msg), reply);
 	}
 	else
-		THROW(("BeIDE is not running"));	
+		THROW(("BeIDE/Paladin is not running"));	
 } /* SendToIDE */
 
 void RelativePath(const entry_ref& a, const entry_ref& b, char* path)

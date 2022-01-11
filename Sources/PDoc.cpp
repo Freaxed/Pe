@@ -187,8 +187,9 @@ void PDoc::InitWindow(const char *name)
 	// add the BeIDE menu, if desired
 	if (showIde)
 	{
-		BMimeType mime("application/x-mw-BeIDE");
-		if (mime.IsInstalled())
+		bool ideInstalled = BMimeType("application/x-mw-BeIDE").IsInstalled()       || 
+							BMimeType("application/x-vnd.dw-Paladin").IsInstalled();
+		if (ideInstalled)
 		{
 			BMenu *menu = HResources::GetMenu(rid_Menu_DwBeide);
 			BMenuItem *ideMenuItem = new CMenuItem(menu);
@@ -1876,12 +1877,13 @@ void PDoc::IDEBringToFront()
 {
 	entry_ref ide;
 	if (be_roster->FindApp("application/x-mw-BeIDE", &ide))
-		THROW(("BeIDE was not found"));
+		if (be_roster->FindApp("application/x-vnd.dw-Paladin", &ide))
+			THROW(("BeIDE/Paladin was not found"));
 
 	if (be_roster->IsRunning(&ide))
 		be_roster->ActivateApp(be_roster->TeamFor(&ide));
 	else if (be_roster->Launch(&ide) != B_OK)
-		THROW(("Could not launch BeIDE"));
+		THROW(("Could not launch BeIDE/Paladin"));
 } /* PDoc::IDEBringToFront */
 
 void PDoc::IDEAddFile()
@@ -1934,7 +1936,8 @@ void PDoc::IDEMake()
 
 	entry_ref ide;
 	if (be_roster->FindApp("application/x-mw-BeIDE", &ide))
-		THROW(("BeIDE was not found"));
+	 if (be_roster->FindApp("application/x-vnd.dw-Paladin", &ide))
+			THROW(("BeIDE/Paladin was not found"));
 
 	if (be_roster->IsRunning(&ide))
 	{
@@ -1942,7 +1945,7 @@ void PDoc::IDEMake()
 		msgr.SendMessage(&msg);
 	}
 	else
-		THROW(("BeIDE is not running"));
+		THROW(("BeIDE/Paladin is not running"));
 } /* PDoc::IDEMake */
 
 void PDoc::IDEProject2Group()

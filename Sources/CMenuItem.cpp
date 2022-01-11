@@ -45,8 +45,16 @@ CMenuItem::CMenuItem(BMenu *subMenu)
 	{
 		sfBitmap = new BBitmap(BRect(0, 0, 15, 15), B_COLOR_8_BIT);
 		
-		BMimeType mime("application/x-mw-BeIDE");
-		mime.GetIcon(sfBitmap, B_MINI_ICON);
+		BMimeType ide("application/x-mw-BeIDE");
+
+		if (ide.IsInstalled())
+			ide.GetIcon(sfBitmap, B_MINI_ICON);
+		else 
+		{
+			ide.SetTo("application/x-vnd.dw-Paladin");
+			if (ide.IsInstalled())
+				ide.GetIcon(sfBitmap, B_MINI_ICON);
+		}
 	}
 } /* CMenuItem::CMenuItem */
 
